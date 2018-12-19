@@ -24,7 +24,7 @@ class Book(models.Model):
     edition = models.IntegerField()
     cover_url = models.CharField(max_length=100)
     stock = models.IntegerField(default=0)
-    genre = models.ManyToManyField(Genre)
+    genres = models.ManyToManyField(Genre)
 
     def __str__(self):
         return self.title
