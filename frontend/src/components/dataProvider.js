@@ -253,7 +253,7 @@ class DataProvider extends React.Component {
     if (loaded) {
       view = (
         <div>
-          {this.props.isLogedIn ? <CreateNew /> : null}
+          {"isLogedIn" in this.props && this.props.isLogedIn ? <CreateNew /> : null}
           {this.props.render(data, total, this.props.isLogedIn)}
           <div className="container">
             <div className="col-lg-4 mx-auto">
