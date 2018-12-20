@@ -1,7 +1,7 @@
 
 # Library-Py
 
-### Prerequisites
+### Requirements
 To install and run this project you need:
 * `Python 3.6+`
 * `npm`
@@ -44,6 +44,6 @@ To install and run this project you need:
   python manage.py createsuperuser --email admin@example.com --username admin
   ```
   * Then go to `http://127.0.0.1:8000/admin` to log into the admin account.
-  * To create, edit and remove books, goto `http://127.0.0.1:8000/admin_page`
+  * To create, edit and remove books, go to `http://127.0.0.1:8000/admin_page`
   * **Note:** you can only modify the database if you are loged as the admin.
   * In the current version you cannot log out, please delete the site cookies to logout.
