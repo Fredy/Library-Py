@@ -1,6 +1,6 @@
 from .models import Author, Genre, Book
 from .serializers import AuthorSerializer, GenreSerializer, BookSerializer, BookSimpleSerializer
-from rest_framework import generics
+from rest_framework import generics, permissions
 from rest_framework.exceptions import ParseError
 
 
@@ -9,12 +9,14 @@ class BookList(generics.ListAPIView):
 
     def get_queryset(self):
         """
-        Filter against title and author name.
+        Filter against title, author name and date.
         """
         queryset = Book.objects.all()
         title = self.request.query_params.get('title', None)
         author = self.request.query_params.get('author', None)
         author_id = self.request.query_params.get('author_id', None)
+        pubStart = self.request.query_params.get('pubStart', None)
+        pubEnd = self.request.query_params.get('pubEnd', None)
 
         if title is not None:
             queryset = queryset.filter(title__contains=title)
@@ -30,6 +32,13 @@ class BookList(generics.ListAPIView):
             first_query = queryset.filter(authors__first_name__contains=author)
             last_query = queryset.filter(authors__last_name__contains=author)
             queryset = first_query | last_query
+
+        if pubStart is not None or pubEnd is not None:
+            if pubStart is None:
+                pubStart = '0'
+            if pubEnd is None:
+                pubEnd = '9999'
+            queryset = queryset.filter(pub_date__year__range=[pubStart, pubEnd])
         queryset.distinct()
 
         return queryset
@@ -37,6 +46,7 @@ class BookList(generics.ListAPIView):
 
 
 class BookRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
     queryset = Book.objects.all()
     serializer_class = BookSimpleSerializer
 
