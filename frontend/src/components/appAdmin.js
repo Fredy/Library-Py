@@ -3,14 +3,6 @@ import ReactDOM from "react-dom";
 import DataProvider from "./dataProvider";
 import Table from "./table";
 
-function getCookie(name) {
-  let value = "; " + document.cookie;
-  let parts = value.split("; " + name + "=");
-  if (parts.length == 2) {
-    return parts.pop().split(";").shift();
-  }
-}
-
 class SearchInput extends React.Component {
   constructor(props) {
     super(props);
@@ -92,21 +84,14 @@ class SearchInput extends React.Component {
   }
 }
 
-class App extends React.Component {
+class AppAdmin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: "",
       params: {}
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  componentDidMount() {
-    this.setState({
-      token: getCookie("sessionid")
-    });
   }
 
   handleSubmit(title, author, pubStart, pubEnd) {
@@ -120,12 +105,11 @@ class App extends React.Component {
     });
   }
 
-  renderTable(data, totalData) {
-    return <Table data={data} total={totalData} />
+  renderTable(data, totalData, isLogedIn) {
+    return <Table data={data} total={totalData} isLogedIn={isLogedIn}/>
   }
 
   render() {
-    console.log(this.state.token);
     return (
       <div className="container pb-2">
         <SearchInput
@@ -133,7 +117,7 @@ class App extends React.Component {
         />
 
         <DataProvider
-          isLogedIn={this.state.token ? true : false}
+          isLogedIn={true}
           endpoint="api/books"
           render={this.renderTable}
           params={this.state.params}
@@ -144,5 +128,5 @@ class App extends React.Component {
 }
 
 // Render the app.
-const wrapper = document.getElementById("app");
-wrapper ? ReactDOM.render(<App />, wrapper) : null;
+const wrapper = document.getElementById("appAdmin");
+wrapper ? ReactDOM.render(<AppAdmin />, wrapper) : null;

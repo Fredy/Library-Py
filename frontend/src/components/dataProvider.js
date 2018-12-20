@@ -1,6 +1,154 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+function getCookie(name) {
+  let value = "; " + document.cookie;
+  let parts = value.split("; " + name + "=");
+  if (parts.length == 2) {
+    return parts.pop().split(";").shift();
+  }
+}
+
+class CreateNew extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: "",
+      authors: [0],
+      pub_date: "2000-01-01",
+      edition: "1",
+      cover_url: "",
+      stock: "0",
+      genres: [0],
+    }
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    const target = event.target;
+    const name = target.name;
+    let value = target.value
+
+    if (name === "authors" || name === "genres") {
+      let tmp = this.state[name].slice();
+      tmp[0] = value;
+      value = tmp;
+    }
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    const conf = {
+      method: "POST",
+      body: JSON.stringify(this.state),
+      headers: new Headers({
+        "Content-Type": "application/json",
+        "X-CSRFTOKEN": getCookie("csrftoken")
+      })
+    };
+    fetch("/api/books/add", conf)
+      .then(response => {
+        if (response.status === 201) {
+          return "Saved!";
+        }
+        console.log(response);
+        return `(${response.status}) Error: ${response.statusText}`;
+      }).then(message => alert(message));
+  }
+
+  render() {
+    return (
+      <div>
+        <h1> Create New</h1>
+        <div className="card my-2 py-2 px-2" >
+          <form className="form-horizontal" onSubmit={this.handleSubmit}>
+            <div className="form-group ">
+              <label className="col-sm-2 control-label">
+                Title
+          </label>
+              <div className="col-sm-10">
+                <input name="title" className="form-control" type="text"
+                  value={this.state.title} onChange={this.handleChange} />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="col-sm-2 control-label ">
+                Author Id
+          </label>
+              <div className="col-sm-10">
+                <input name="authors" className="form-control" type="number"
+                  value={this.state.authors[0]} onChange={this.handleChange} />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="col-sm-2 control-label ">
+                Publication date
+          </label>
+              <div className="col-sm-10">
+                <input name="pub_date" className="form-control" type="date"
+                  value={this.state.pub_date} onChange={this.handleChange} />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="col-sm-2 control-label ">
+                Edition
+          </label>
+              <div className="col-sm-10">
+                <input name="edition" className="form-control" type="number"
+                  value={this.state.edition} onChange={this.handleChange} />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="col-sm-2 control-label ">
+                Cover url
+          </label>
+              <div className="col-sm-10">
+                <input name="cover_url" className="form-control" type="text"
+                  value={this.state.cover_url} onChange={this.handleChange} />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="col-sm-2 control-label ">
+                Available stock
+          </label>
+              <div className="col-sm-10">
+                <input name="stock" className="form-control" type="number"
+                  value={this.state.stock} onChange={this.handleChange} />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="col-sm-2 control-label ">
+                Genre Id
+          </label>
+              <div className="col-sm-10">
+                <input name="genres" className="form-control" type="number"
+                  value={this.state.genres[0]} onChange={this.handleChange} />
+              </div>
+            </div>
+
+            <button className="btn btn-primary ml-3" >Save</button>
+          </form>
+          <div className="row">
+            <button className="btn btn-danger ml-4 mt-2" onClick={this.props.handleDelete}>Delete</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
 class DataProvider extends React.Component {
   constructor(props) {
     super(props);
@@ -105,7 +253,8 @@ class DataProvider extends React.Component {
     if (loaded) {
       view = (
         <div>
-          {this.props.render(data, total)}
+          {this.props.isLogedIn ? <CreateNew /> : null}
+          {this.props.render(data, total, this.props.isLogedIn)}
           <div className="container">
             <div className="col-lg-4 mx-auto">
               <div className="row justify-content-around">
@@ -123,6 +272,7 @@ class DataProvider extends React.Component {
                     disabled={!Boolean(this.state.nextUrl)}
                   >Next page</button>
                 </div>
+
               </div>
             </div>
           </div>

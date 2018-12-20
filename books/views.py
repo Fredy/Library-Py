@@ -50,6 +50,10 @@ class BookRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSimpleSerializer
 
+class BookCreate(generics.CreateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = Book.objects.all()
+    serializer_class = BookSimpleSerializer
 
 class AuthorList(generics.ListAPIView):
     queryset = Author.objects.all()

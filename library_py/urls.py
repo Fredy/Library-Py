@@ -18,7 +18,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin1', auth_views.LoginView.as_view()),
+    path('admin', auth_views.LoginView.as_view()),
     path('api/', include('books.urls')),
     path('', include('frontend.urls'))
 ]

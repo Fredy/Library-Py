@@ -4,23 +4,15 @@ import DataProvider from "./dataProvider";
 import Table from "./table";
 
 function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
+  let value = "; " + document.cookie;
+  let parts = value.split("; " + name + "=");
+  if (parts.length == 2) {
+    return parts.pop().split(";").shift();
+  }
 }
 
 function CSRFToken() {
-  let csrftoken = getCookie("csrfToken");
+  let csrftoken = getCookie("csrftoken");
   return (
     <input type="hidden" name="csrfmiddlewaretoken" value={csrftoken} />
   );
@@ -54,8 +46,8 @@ class Login extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const { user, password  } = this.state;
-    const lead = { user, password  };
+    const { user, password } = this.state;
+    const lead = { user, password };
     const conf = {
       method: "post",
       body: JSON.stringify(lead),
@@ -67,13 +59,13 @@ class Login extends React.Component {
   }
 
   renderTable(data, totalData) {
-    return <Table data={data} total={totalData} />
+    return <Table data={data} total={totalData} isLogedIn={false} />
   }
 
   render() {
     return (
       <div className="text-center">
-        <form className="form-login" onSubmit={this.handleSubmit}>
+        <form className="form-login" method="POST">
           <CSRFToken />
           <h1> Admin login </h1>
           <hr className="my-4"></hr>
