@@ -12,6 +12,7 @@ faker = "*"
 [packages]
 django = "*"
 djangorestframework = "*"
+faker = "*"
 
 [requires]
 python_version = "3.7"
