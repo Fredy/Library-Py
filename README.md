@@ -1,12 +1,14 @@
 
 # Library-Py
 
-### How to install
-
-#### Pre
+### Prerequisites
 To install and run this project you need:
 * `Python 3.6+`
 * `npm`
+
+### How to install
+
+
 
 1. Clone this repo `git clone https://github.com/Fredy/Library-Py.git` and `cd` to the repo directory.
 2. If you have pipenv:
@@ -24,12 +26,12 @@ To install and run this project you need:
    export DJANGO_KEY='%@r_g2yvvbdemk&%&6f-k=w^e7f5-)tryvrraj6)5s8%4sc*#v' // A random string of size 50
    ```
 6. Run:
-  ```
-  python manage.py makemigrations books
-  python manage.py migrate
-  python datagen.py
-  python manage.py loaddata books
-  ```
+   ```
+   python manage.py makemigrations books
+   python manage.py migrate
+   python datagen.py
+   python manage.py loaddata books
+   ```
 7. Run the servers:  
    In one terminal: `python manage.py runserver`   
    In another terminal: `npm run dev`
